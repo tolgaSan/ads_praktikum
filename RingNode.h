@@ -18,15 +18,15 @@ private:
 public:
 	//
 	RingNode();
-	RingNode(int, const std::string, const std::string);
+	RingNode(int, std::string, std::string);
 	~RingNode();
 
 	int getOldAge();
 	void setOldAge(int);
 	std::string getDescription();
-	void setDescription(std::string);
+	void setDescription(std::string m_description);
 	std::string getSymbolicData();
-	void setSymbolicData(std::string);
+	void setSymbolicData(std::string m_symbolicData);
 	RingNode* getNext();
 	void setNext(RingNode*); 
 	//

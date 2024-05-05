@@ -27,26 +27,27 @@ void print_menu()
 void menu_auswahl(){
     cout << "====================================" << endl 
         << "Bitte waehle eine Ziffer (1, 2, 3, 4) aus!" << endl;
+
+    Ring* ring = new Ring;    
     char auswahl;
     cin >> auswahl;
-    string beschreibung="", daten="";
-    Ring ring;
+    string beschreibung="", data="";
     switch (auswahl) {
         case '1':
             cout << "+Neuen Datensatz anlegen" << endl;
             cout << "Beschreibung ?> " << endl;
             cin >> beschreibung;
             cout << "Daten ?> " << endl;
-            cin >> daten;
-            ring.addNewNode(beschreibung, daten);
-            ring.search(daten);
+            cin >> data;
+            ring->addNewNode(beschreibung, data);
             break;   
         case '2':
             cout << "nach welchen Daten soll gesucht werden?" << endl;
-            cout << "?> [Datenname]" << endl;
-            cout << "[Programm einfügen für die Suche]" << endl;
-            cout << "+ Gefunden in Backup: [Alter, Beschreibung, Daten]" << endl;
-            cout << "Oder Datensatz wurde nicht gefunden" << endl;
+            cout << "?> ";
+            cin >> data;
+            ring->search(data);
+            cout << endl << "[Ob gefunden oder nicht gefunden und zurück ins Menu + Neu auswählen einfügen]";
+
             break;
         case '3':
             cout << "[Programm einfügen, dass Datensätze nach Alter sortiert ausgibt]" << endl;
@@ -54,8 +55,10 @@ void menu_auswahl(){
             break;
         case '4':
             cout << "Programm wird durch die Auswahl '4' beendet"<<endl;
+            break;
         default:
             cout << "Keine gültige Eingabe. Gültige Eingabe sind Ziffern 1-4" << endl;
+            break;
     }
 
 }
@@ -66,6 +69,7 @@ int main()
 	// Ihr Code hier:
     print_menu();
     menu_auswahl();
+
 	//
 	///////////////////////////////////////
 	system("Pause");

@@ -7,19 +7,13 @@
 
 ////////////////////////////////////
 // Ihr Code hier:
-    
-RingNode::RingNode(){
-	int m_oldAge = 0;
-	std::string m_description = "";
-	std::string m_symbolicData = "";
-	RingNode* m_next = nullptr;
+   
+RingNode::RingNode(): m_oldAge(0), m_description(""), m_symbolicData(""), m_next(nullptr){
+	
 }
 
-RingNode::RingNode(int oldAge, std::string description, std::string data){
-	int m_oldAge = oldAge;
-	std::string m_description = description;
-	std::string m_symbolicData = data;
-	RingNode* m_next = nullptr;
+RingNode::RingNode(int oldAge, std::string description, std::string data):
+ m_oldAge{ oldAge }, m_description{ description }, m_symbolicData {data}, m_next {nullptr}{
 }
 
 RingNode::~RingNode(){
@@ -33,12 +27,20 @@ void RingNode::setOldAge(int oldAge){
 	this->m_oldAge = oldAge;
 }
 
+std::string RingNode::getDescription(){
+    return this->m_description;
+}
+
+void RingNode::setDescription(std::string description){
+    this->m_description = description;
+}
+
 std::string RingNode::getSymbolicData(){
 	return this->m_symbolicData;
 }
 
 void RingNode::setSymbolicData(std::string data){
-	this->m_symbolicData = data;
+	m_symbolicData = data;
 }
 
 RingNode* RingNode::getNext(){
@@ -46,7 +48,7 @@ RingNode* RingNode::getNext(){
 }
 
 void RingNode::setNext(RingNode* node){
-	node = node->m_next;
+	m_next = node;
 }
 // 
 ////////////////////////////////////

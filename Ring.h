@@ -5,9 +5,9 @@
 *************************************************/
 // Ring .h
 #pragma once
-#include <string>
+#include<string>
 #include "catch.h"
-#include "RingNode.h"
+#include"RingNode.h"
 
 class Ring{
 	
@@ -20,11 +20,12 @@ class Ring{
 	public:
 		// Ihr Code hier:
 		Ring();
+		Ring(int m_countNodes, RingNode* m_anker);
 		~Ring();
 		void addNewNode(std::string, std::string);
-		bool search(std::string);
+		bool search(std::string node);
 		friend void print();
-	 
+
 		//
 		////////////////////////////////////
 		// friend Funktionen müssen unangetastet bleiben! 

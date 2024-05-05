@@ -8,25 +8,33 @@
 #include <iostream>
 
 // Ihr Code hier:
-Ring::Ring(){
-	int m_countNodes = 0;
-	RingNode* m_anker = nullptr;
+Ring::Ring() : m_countNodes(0), m_anker(nullptr){
+
 }
 
 Ring::~Ring() {
+    RingNode* tmp = m_anker;
+    RingNode* delNode;
+    for(int i = 0; i < m_countNodes; i++) {
+        delNode = m_anker->getNext();
+        m_anker->setNext(delNode->getNext());
+        delete delNode;
+    }
 }
 
-void Ring::addNewNode(std::string beschreibung, std::string daten){
-/*	if(this->m_countNodes == 0) {
-		m_anker->setDescription(beschreibung);
-		m_anker->setSymbolicData(daten);
+void Ring::addNewNode(std::string description, std::string data){
+	if(this->m_countNodes == 0) {
+		m_anker = new RingNode();
+		m_anker->setDescription(description);
+		m_anker->setSymbolicData(data);
 		m_anker->setOldAge(0);
+		m_anker->setNext(m_anker);
 		m_countNodes++;
 	} else if(this->m_countNodes < 6) {
 		RingNode* tmp = m_anker;
 		RingNode* newNode = new RingNode();
-		newNode->setDescription(beschreibung);
-		newNode->setSymbolicData(daten);
+		newNode->setDescription(description);
+		newNode->setSymbolicData(data);
 		newNode->setOldAge(0);
 		
 		while(tmp->getNext() != m_anker) {
@@ -39,23 +47,27 @@ void Ring::addNewNode(std::string beschreibung, std::string daten){
 		m_anker->setNext(newNode);
 		m_anker = newNode;
 		m_countNodes++;
-	}*/
+	}
 }
 
-bool Ring::search(std::string daten){
-	/*RingNode* tmp = m_anker;
+bool Ring::search(std::string data){
+	RingNode* tmp = m_anker;
 	RingNode* searchNode = new RingNode();
-	searchNode->setSymbolicData(daten);
+	searchNode->setSymbolicData(data);
 	for(int i = 0; i < m_countNodes; i++){
-		if(tmp->getSymbolicData() == searchNode->getSymbolicData()) {
+		if(tmp->getSymbolicData() == data) {
+            std::cout << "gefunden";
 			return true;
 		} else {
 			tmp->getNext();
 		}
+        std::cout << "nicht gefunden";
 		return false;
-	}*/
-	return true;
+	}
+    return false;
 }
+
+
 
 void print(){
 	std::cout << "print die Daten Bro";
