@@ -3,16 +3,16 @@
  * Tree.cpp
  * Erweiterung um Hilfsfunktionen gestattet.
  *************************************************/
+#include <iostream>
 #include "Tree.h"
 #include "TreeNode.h"
 #include <iomanip>
-#include <iostream>
 #include <queue>
 using namespace std;
 
 ////////////////////////////////////
 // Ihr Code hier:
-Tree::Tree(): m_anker(nullptr), m_currentNodeChronologicalID(counter) {
+Tree::Tree(): m_anker(nullptr), m_currentNodeChronologicalID(0) {
 
 }
 Tree::~Tree() {
@@ -56,7 +56,7 @@ void Tree::addNode(string name, int age, double income, int postCode){
         else {
             child = parent->getRight();
         }
-        //Traverse bis zum Blatt
+        //tmperse bis zum Blatt
         while(child != nullptr) {
             parent = child;
 
@@ -75,7 +75,7 @@ void Tree::addNode(string name, int age, double income, int postCode){
         //Eventuell Stack hinzufügen?
 
         tree.push_back(newTreeNode);
-        counter++;
+        m_currentNodeChronologicalID++;
     }
 }
 
@@ -86,88 +86,109 @@ bool Tree::deleteNode(int nodeOrderID){
     for(auto start = tree.begin(); start != tree.end();){
         if((*start)->getNodeOrderID() == nodeOrderID){
             tree.erase(start); 
-            return true;
         } else ++start;
     } 
-
-    TreeNode* trav = m_anker;
+    //tmp stellt den aktuellen Verweis dar. Parent zeigt auf den Elternknoten des aktuellen Knotens
+    TreeNode* tmp = m_anker;
     TreeNode* parent = nullptr;
 
-    while (trav != nullptr && trav->getNodeOrderID() != nodeOrderID) {
-        parent = trav;
-        if(trav->getNodeOrderID() > nodeOrderID){
-            trav = trav->getLeft();
+    while (tmp != nullptr && tmp->getNodeOrderID() != nodeOrderID) {
+        parent = tmp;
+        if(tmp->getNodeOrderID() > nodeOrderID){
+            tmp = tmp->getLeft();
         } else {
-            trav = trav->getRight();
+            tmp = tmp->getRight();
         }
     }
 
     //Falls nicht fündig
-    if(trav == nullptr) return false;
+    if(tmp == nullptr) return false;
 
     //Kein Nachfolger
-    if(trav->getLeft() == nullptr && trav->getRight() == nullptr){
+    if(tmp->getLeft() == nullptr && tmp->getRight() == nullptr){
         if(parent == nullptr) m_anker = nullptr;
         else {
-            if(parent->getLeft() == trav) parent->setLeft(nullptr);
+            if(parent->getLeft() == tmp) parent->setLeft(nullptr);
             else parent->setRight(nullptr);
         }
-        delete trav;
-        counter--;
+        delete tmp;
+        cout << "ist gelöscht!" << endl;
+        m_currentNodeChronologicalID--;
         return true;
     //ein Nachfolger entweder links oder rechts
-    } else if((trav->getLeft() == nullptr && trav->getRight() != nullptr) || (trav->getLeft() != nullptr && trav->getRight() == nullptr)) {
+    } else if((tmp->getLeft() == nullptr && tmp->getRight() != nullptr) || (tmp->getLeft() != nullptr && tmp->getRight() == nullptr)) {
+        //Changer stellt den ersetzer dar (von childChild zu parent)
         TreeNode* changer;
 
-        if(trav->getLeft() != nullptr) changer = trav->getLeft();
-        else changer = trav->getRight();
+        if(tmp->getLeft() != nullptr) changer = tmp->getLeft();
+        else changer = tmp->getRight();
 
         if(parent == nullptr) m_anker = changer;
         else{
-            if(parent->getLeft() == trav) parent->setLeft(changer);
+            if(parent->getLeft() == tmp) parent->setLeft(changer);
             else parent->setRight(changer);
         }
-        delete trav;
-        counter--;
+        delete tmp;
+        cout << "ist gelöscht!" << endl;
+        m_currentNodeChronologicalID--;
         return true;
     //2 Nachfolger
     } else {
         TreeNode* parentMinNode;
         TreeNode* minNode;
-        parentMinNode = trav;
-        minNode = trav->getRight();
+        parentMinNode = tmp;
+        minNode = tmp->getRight();
 
         while(minNode->getLeft() != nullptr) {
             parentMinNode = minNode;
             minNode = minNode->getLeft();
         }
 
-        minNode->setLeft(trav->getLeft());
+        minNode->setLeft(tmp->getLeft());
 
-        if(parentMinNode != trav) {
+        if(parentMinNode != tmp) {
             parentMinNode->setLeft(minNode->getRight());
-            minNode->setRight(trav->getRight());
+            minNode->setRight(tmp->getRight());
         } 
         if(parent == nullptr) m_anker = minNode;
         else {
-            if(parent->getLeft() == trav) parent->setLeft(minNode);
+            if(parent->getLeft() == tmp) parent->setLeft(minNode);
             else parent->setRight(minNode);
         }
-        delete trav;
-        counter--;
+        cout << "ist gelöscht!" << endl;
+        delete tmp;
+        m_currentNodeChronologicalID--;
         return true;
     }
 }
 
+bool found = false;
 bool Tree::searchNode(string name){
-    vector<TreeNode*> trav;
-    for(unsigned int i = 0; i < tree.size(); i++){
-        if (tree[i]->getName() == name) trav.push_back(tree[i]);
+    /**/
+    if(m_anker == nullptr) {
+        cout << "Liste ist leer!";
+        return false;
     }
-    if(trav.size() == 0) return false;
-    else return true;
+    if(m_anker != nullptr) {
+        searchNodeHilfsFunktion(m_anker,name);
+    }
+    if(!found) {
+        cout << "Nicht gefunden!";
+        return false;
+    }
+    found = false; 
+    cout << "gefunden!";
+    return true;
 
 }
+
+void Tree::searchNodeHilfsFunktion(TreeNode* treeNode, string name) {
+    if(treeNode->getName() == name) found = true;
+    if(treeNode->getLeft() != nullptr) searchNodeHilfsFunktion(treeNode->getLeft(), name);
+    if(treeNode->getRight() != nullptr) searchNodeHilfsFunktion(treeNode->getRight(), name);
+}
+
+
 
 void Tree::levelOrder(){
     TreeNode* root = m_anker;
@@ -183,6 +204,13 @@ void Tree::levelOrder(){
 
     int prev = -1;
     int current = 0;
+    cout << setw(4) << "ID " << "|"
+        << setw(20) << "Name: " << "|"
+        << setw(8) << "Age: "<< "|"
+        << setw(8) << "Income: "<< "|"
+        << setw(10) << "PostCode: "<< "|"
+        << setw(15) << "NodeOrderID: "<< "|"
+        << setw(5) << "Level: " << endl; 
     while (!treeLevelOrder.empty()) {
         TreeNode* s = treeLevelOrder.front();
         treeLevelOrder.pop();
@@ -190,14 +218,15 @@ void Tree::levelOrder(){
         level.pop();
 
         if(prev != current) prev = current;
-
-        cout << setw(4) << s->getNodeChronologicalID() << " "
-        << setw(20) << s->getName() << " " 
-        << setw(8) << s->getAge() << " "
-        << setw(8) << s->getIncome() << " "
-        << setw(10) << s->getPostCode() << " "
-        << setw(9) << s->getNodeOrderID() << " "
-        << setw(5) << current << " " << endl;
+        
+        cout 
+        << setw(4) << s->getNodeChronologicalID() << "|"
+        << setw(20) << s->getName() << "|"
+        << setw(8) << s->getAge()<< "|"
+        << setw(8) << s->getIncome()<< "|"
+        << setw(10) << s->getPostCode()<< "|"
+        << setw(15) << s->getNodeOrderID()<< "|"
+        << setw(5) << current << endl;
         
 
         if(s->getLeft() != nullptr) {
@@ -212,8 +241,11 @@ void Tree::levelOrder(){
     return;
 }
 
-void Tree::printLevelOrder(){
-    levelOrder();
-}
-//
+
+
+ void Tree::printLevelOrder(){
+     levelOrder();
+ }
+
+// //
 ////////////////////////////////////

@@ -33,8 +33,8 @@ TreeNode::~TreeNode() {
 */
 
 
-void TreeNode::setNodeOrderID(int age, int income, int postCode){
-    this->m_NodeOrderID = age+income+postCode;
+void TreeNode::setNodeOrderID(int nodeOrderID){
+    this->m_NodeOrderID = nodeOrderID;
 }
 void TreeNode::setNodeChronologicalID(int m_NodeChronologicalID){
     this->m_NodeChronologicalID = m_NodeChronologicalID;
@@ -56,7 +56,6 @@ void TreeNode::setLeft(TreeNode* treeLeftNode){
 }
 void TreeNode::setRight(TreeNode* treeRigthNode){
     this->m_right = treeRigthNode;
-
 }
 
 int TreeNode::getNodeOrderID(){

@@ -7,7 +7,7 @@
 #include "Tree.h"
 #include "catch.h"
 #include <iostream>
-
+#include <string>
 using namespace std;
 
 ///////////////////////////////////////
@@ -56,38 +56,63 @@ void mainscreen_addTreeCSV(Tree*& ref)
     }
 }
 
-void menuAusgabe(){
+Tree* tree = new Tree();
 
-    cout << "1) Datensatz einfuegen, manuell" << endl
+void menuAuswahl(){
+
+    cout << endl << "1) Datensatz einfuegen, manuell" << endl
         << "2) Datensatz einfuegen, CSV Datei" << endl
         << "3) Datensatz loeschen" << endl
         << "4) Datensatz suchen" << endl 
         << "5) Datenstruktur anzeigen (pre/post/in)" << endl
         << "6) Level-Order Ausgabe" << endl
-        << "Beenden" << endl;
+        << "7) Beenden" << endl;
 
     int auswahl;
     cin >> auswahl;
+    string name;
+    int age, income, postCode;
+    int nodeOrderID;
     switch(auswahl) {
-        case '1':
-            cout << "[Programm um Datensatz einfügen]" << endl;
+        case 1:
+            cout << "Name: " << endl;
+            cin  >> name;
+            cout << "age: " << endl;
+            cin >> age;
+            cout << "income: " << endl;
+            cin >> income;
+            cout << "postCode: " << endl;
+            cin >> postCode;
+            tree->addNode(name, age, income, postCode);
+            cout << "hinzugefuegt" << endl;
+            menuAuswahl();
             break;
-        case '2':
+        case 2:
             cout << "[Programm um Datensatz zu importieren]" << endl;
+            mainscreen_addTreeCSV(tree);
+            menuAuswahl();
             break;
-        case '3':
-            cout << "[Programm Datensatz löschen]" << endl;
+        case 3:
+            cout << "welcher Datensatz soll gelöscht werden??? " << endl;
+            cin >> nodeOrderID;
+            tree->deleteNode(nodeOrderID);
+            menuAuswahl();
             break;
-        case '4':
-            cout << "[Programm Suchen]" << endl;
+        case 4:
+            cout << "Welcher Datensatz soll gefunden werden???" << endl;
+            cin >> name;
+            tree->searchNode(name);
+            menuAuswahl();
             break;
-        case '5':
-            cout << "[Datenstruktur anzeigen Programm]" << endl;
+        case 5:
+            tree->printAll();
+            menuAuswahl();
             break;
-        case '6':
-            cout << "[Level Order Ausgabe]" << endl;
+        case 6:
+            tree->printLevelOrder();
+            menuAuswahl();
             break;
-        case '7':
+        case 7:
             cout << "[Einfach beenden]" << endl;
             return;
     }
@@ -100,10 +125,15 @@ int main()
 {
 
     int result = Catch::Session().run();
-
     ///////////////////////////////////////
     // Ihr Code hier:
-    menuAusgabe();
+    tree->addNode("A", 30, 50000, 12345);
+    tree->addNode("B", 25, 60000, 23456);
+    tree->addNode("C", 35, 70000, 34567);
+    tree->addNode("d", 32, 12312, 12345);
+    tree->addNode("E", 21, 31234, 23456);
+    tree->addNode("F", 10, 30023, 34567);
+    menuAuswahl();
     //
     ///////////////////////////////////////
     system("PAUSE");

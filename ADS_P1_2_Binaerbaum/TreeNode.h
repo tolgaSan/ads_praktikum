@@ -32,7 +32,7 @@ public:
     TreeNode();
 
 
-    void setNodeOrderID(int,int,int);
+    void setNodeOrderID(int);
     void setNodeChronologicalID(int);
     void setName(string);
     void setAge(int);
